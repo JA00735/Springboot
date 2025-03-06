@@ -3,10 +3,13 @@ package com.jesus.curso.springboot.webapp.controllers;
 import com.jesus.curso.springboot.webapp.models.User;
 import com.jesus.curso.springboot.webapp.models.dto.ParamDto;
 import com.jesus.curso.springboot.webapp.models.dto.ParamsDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,6 +24,13 @@ public class PathVariableController {
     private Integer id;
     @Value("${Value.list}")
     private String[] list;
+    @Value("#{'${Value.list}'.toUpperCase().split(',')}")
+    private List<String> mayu;
+    @Value("#{${Value.map}}")
+    private Map<String,Object>map;
+
+    @Autowired
+    private Environment env;
 
     @GetMapping("/path/{mensaje}")
     public ParamDto param (@PathVariable String mensaje){
@@ -53,6 +63,10 @@ public class PathVariableController {
         json.put("lastname",lastname);
         json.put("id",id);
         json.put("list",list);
+        json.put("mayu",mayu);
+        json.put("map",map);
+        json.put("list2", env.getProperty("Value.list"));
+        json.put("precio",Integer.valueOf(env.getProperty("Value.precio")));
         return json;
 }
 }
